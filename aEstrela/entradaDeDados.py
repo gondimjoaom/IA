@@ -1,11 +1,15 @@
+import queue
 import classeEstado as node
 
 def isSolution (state):
-    if (state.tab[1] == [1, 2, 3]):
-        if (state.tab[2] == [4, 5, 6]):
-            if (state.tab[3] == [7, 8, 9]):
+    if (state.tab[0] == [1, 2, 3]):
+        if (state.tab[1] == [4, 5, 6]):
+            if (state.tab[2] == [7, 8, 9]):
                 return True
     return False
+
+def heuristica (state):
+
         
 
 estado = [[0,0,0],[0,0,0],[0,0,0]]
@@ -23,8 +27,18 @@ estado[2][0] = int(input())
 estado[2][1] = int(input())
 estado[2][2] = int(input())
 
-node = node.State()
+frontier = []
+no = node.State(tab = estado)
+frontier.insert(no)
 
-node.tab = estado
-if (isSolution(node)):
-    print(node.tab)
+if (isSolution(no)):
+    print(no.tab)
+
+explore = []
+
+while True:
+    if len(frontier) == 0:
+        break
+    estado = frontier.pop()
+    if isSolution(estado):
+        break
