@@ -9,13 +9,13 @@
         self.coluna_espaco = 0
         self.acao = 'acao' '''
 tab = [[0,0,0],[0,0,0],[0,0,0]]
-class State ():
+class State (object):
     def __init__(self, pai = 0, tab = tab, profundidade = 0, custo = 0, f = 0, linha_espaco = 0, coluna_espaco = 0, acao = 'acao'):
         self.pai = pai
         self.tab = tab
         self.profundidade = profundidade
-        self.custo = custo #custo do nó inicial até este nó
-        self.f = f #custo da função heurística 
+        self.custo = custo #custo do no inicial ate este no
+        self.f = f #custo da funcao heuristica
         self.linha_espaco = linha_espaco
         self.coluna_espaco = coluna_espaco
         self.acao = acao
