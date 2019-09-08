@@ -1,9 +1,14 @@
 #import classeEstado as node
 import heapq
+import copy
 
 class State (object):
-    def __init__(self, pai = 0, profundidade = 0, custo = 0, f = 0, linha_espaco = 0, coluna_espaco = 0, acao = 'acao'):
-        self.tab = [[0,0,0],[0,0,0],[0,0,0]]
+    def __init__(self, pai, profundidade, custo, f, linha_espaco, coluna_espaco, acao, tab):
+        #self.tab = copy.deepcopy(tab)
+        table = []
+        for l in tab:
+            table.append(l[:])
+        self.tab = table
         self.pai = pai
         self.profundidade = profundidade
         self.custo = custo #custo do no inicial ate este no
@@ -12,16 +17,19 @@ class State (object):
         self.coluna_espaco = coluna_espaco
         self.acao = acao
 
-def createTable (no):
-    tabela = []
-    for y in no.tab:
-        tabela.append(y)
-    return tabela
+    def addTabela(self, tabela):
+        self.tab = tabela
+
+    def changeTile(self, x, y, newX, newY):
+        aux1 = self.tab[newY][newX]
+        self.tab[newY][newX] = 0
+        self.tab[y][x] = aux1
 
 def isSolution (state):
-    if (state.tab[0] == [0, 1, 2]):
-        if (state.tab[1] == [3, 4, 5]):
-            if (state.tab[2] == [6, 7, 8]):
+    if (state[0] == [0, 1, 2]):
+        if (state[1] == [3, 4, 5]):
+            if (state[2] == [6, 7, 8]):
+                print('aqui')
                 return True
     return False
 
@@ -31,9 +39,9 @@ def printTable(node):
 #MOVIMENTOS
 #para cima:
 
-def expandeNode (no):
+def expandeNode (node):
     y = 0
-    for aux in no.tab:
+    for aux in node:
         try:
             x = aux.index(0)
             vazio = [x,y]
@@ -44,55 +52,35 @@ def expandeNode (no):
         #vazio = [x, y]
     if x == 0:
         if y == 0: # dois nos criados
-            newNode1 = State()
-            newNode1.tab = createTable(no)
-
-            newNode2 = State()
-            #newNode2.tab = createTable(no)
-
-            aux1 = no.tab[y][x + 1]
-            print(aux1)
-            aux2 = no.tab[y + 1][x]
-            print(aux2)
-            #trocando tiles de lugar em cada novo estado
-            newNode1.tab[y][x] = aux1
-            newNode2.tab[y][x] = aux2
-
-            #colocando vazio nos antigos tiles
-            newNode1.tab[y][x + 1] = 0
-            newNode2.tab[y + 1][x] = 0
-            #ajustando outros parametros dos nos criados
-            newNode1.pai = no
-            #tab ja coloquei
-            newNode1.profundidade = no.profundidade + 1
-            newNode1.custo = 0 #mudar com funcao heuristica
-            newNode1.f = 0 #colocar funcao heuristica
-            newNode1.linha_espaco = y
-            newNode1.coluna_espaco = x
-            newNode1.acao = 'move ' + str(aux1) + ' to [' + str(x) + ', ' + str(y) + ']'
-
-            newNode2.pai = no
-            newNode2.profundidade = no.profundidade + 1
-            newNode2.custo = 0 #mudar com funcao heuristica
-            newNode2.f = 0 #colocar funcao heuristica
-            newNode2.linha_espaco = y
-            newNode2.coluna_espaco = x
-            newNode2.acao = 'move ' + str(aux2) + ' to [' + str(x) + ', ' + str(y) + ']'
-
-            #print(newNode1.tab)
+            newNode1 = State('ex1', 1, '1', 0, x, y, '1 no', node)
+            newNode2 = State('ex2', 1, '1', 0, x, y, '2 no', node)
+            newNode1.changeTile(x, y, x + 1, y)
+            newNode2.changeTile(x, y, x, y + 1)
             printTable(newNode1)
-            print('')
-            printTable(no)
-
-            #colocando nos criados na lista
-            #frontier.append(newNode1)
-            #frontier.append(newNode2)
-
+            printTable(newNode2)
+            frontier.append(newNode1)
+            frontier.append(newNode2)
 
         elif y == 1:
-            pass
+            newNode1 = State('ex1', 1, '1', 0, x, y, '1 no', node)
+            newNode2 = State('ex1', 1, '1', 0, x, y, '1 no', node)
+            newNode3 = State('ex1', 1, '1', 0, x, y, '1 no', node)
+
+            newNode1.changeTile(x, y, x, y - 1)
+            newNode2.changeTile(x, y, x + 1, y)
+            newNode3.changeTile(x, y, x, y + 1)
+
+            frontier.append(newNode1)
+            frontier.append(newNode2)
+            frontier.append(newNode3)
+
         elif y == 2:
+            print('oi2')
             pass
+    elif x == 1:
+        pass
+    elif x == 2:
+        pass
 
 estado = [[0,0,0],[0,0,0],[0,0,0]]
 print("Digite a configuracao do estado inicial, linha a linha:")
@@ -110,21 +98,18 @@ estado[2][1] = int(input())
 estado[2][2] = int(input())
 
 frontier = []
-no = State()
-no.tab = estado
+no = State('raiz', 0, 0, 0, 0, 0, 'criar', estado)
+no.addTabela(estado)
 
 frontier.append(no)
-
-if (isSolution(no)):
-    print(no.tab)
 
 explored = []
 
 while True:
     no = frontier.pop()
-    if isSolution(no):
+    estadoAtual = no.tab
+    if isSolution(estadoAtual):
         break
-    #print(no.tab)
-    expandeNode(no)
+    expandeNode(estadoAtual)
     if len(frontier) == 0:
         break
