@@ -23,26 +23,35 @@ class State (object):
         aux1 = self.tab[newY][newX]
         self.tab[newY][newX] = 0
         self.tab[y][x] = aux1
+        self.acao = 'trocar ' + str(self.tab[y][x]) + ' com o 0'
 
-    def heuristica (self, x, y):
+    def heuristica (self):
         h = 0
-        if self.tab[y][x] == 1:
-            h += abs(x - 1) + abs(y - 0)
-        elif self.tab[y][x] == 2:
-            h += abs(x - 2) + abs(y - 0)
-        elif self.tab[y][x] == 3:
-            h += abs(x - 0) + abs(y - 1)
-        elif self.tab[y][x] == 4:
-            h += abs(x - 1) + abs(y - 1)
-        elif self.tab[y][x] == 5:
-            h += abs(x - 2) + abs(y - 1)
-        elif self.tab[y][x] == 6:
-            h += abs(x - 0) + abs(y - 2)
-        elif self.tab[y][x] == 7:
-            h += abs(x - 1) + abs(y - 2)
-        elif self.tab[y][x] == 8:
-            h += abs(x - 2) + abs(y - 2)
-        #print(self.custo + h)
+        y = 0
+        for i in self.tab:
+            x = 0
+            for j in i:
+                if j == 1:
+                    h += abs(x - 1) + abs(y - 0)
+                elif j == 2:
+                    h += abs(x - 2) + abs(y - 0)
+                elif j == 3:
+                    h += abs(x - 0) + abs(y - 1)
+                elif j == 4:
+                    h += abs(x - 1) + abs(y - 1)
+                elif j == 5:
+                    h += abs(x - 2) + abs(y - 1)
+                elif j == 6:
+                    h += abs(x - 0) + abs(y - 2)
+                elif j == 7:
+                    h += abs(x - 1) + abs(y - 2)
+                elif j == 8:
+                    h += abs(x - 2) + abs(y - 2)
+                x += 1
+            y += 1
+                
+        #print(h)
+        self.f = self.custo + h
         return self.custo + h
         
     def __lt__(self, other):
@@ -52,7 +61,7 @@ def isSolution (state):
     if (state[0] == [0, 1, 2]):
         if (state[1] == [3, 4, 5]):
             if (state[2] == [6, 7, 8]):
-                print('aqui')
+                #print('aqui')
                 return True
     return False
 
@@ -80,168 +89,313 @@ def expandeNode (node):
     
     if x == 0:
         if y == 0: # dois nos criados
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
+            #def __init(self, pai, profundidade, custo, f, linha_espaco, coluna_espaco, acao, tab):
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+
             newNode1.changeTile(x, y, x + 1, y)
             newNode2.changeTile(x, y, x, y + 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            if (newNode1 not in frontier):
+            newNode1.heuristica()
+            newNode2.heuristica()
+
+
+            repeated1 = False
+            repeated2 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
-                heapq.heappush(frontier, newNode2)
-            
+            if (not repeated2):
+                heapq.heappush(frontier, newNode2)            
 
         elif y == 1:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
-            newNode3 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+            newNode3 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
 
             newNode1.changeTile(x, y, x, y - 1)
             newNode2.changeTile(x, y, x + 1, y)
             newNode3.changeTile(x, y, x, y + 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            newNode3.f = newNode1.heuristica(x, y) + newNode3.custo
-
-            if (newNode1 not in frontier):
+            newNode1.heuristica()
+            newNode2.heuristica()
+            newNode3.heuristica()
+            
+            repeated1 = False
+            repeated2 = False
+            repeated3 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
-            if (newNode3 not in frontier):
+            if (not repeated3):
                 heapq.heappush(frontier, newNode3)
 
         elif y == 2:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
             
             newNode1.changeTile(x, y, x, y - 1)
             newNode2.changeTile(x, y, x + 1, y)
-           
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            if (newNode1 not in frontier):
+
+            newNode1.heuristica()
+            newNode2.heuristica()
+
+            repeated1 = False
+            repeated2 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
 
     elif x == 1:
         
         if y == 0:
-            
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
-            newNode3 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+            newNode3 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
 
             newNode1.changeTile(x, y, x, y + 1)
             newNode2.changeTile(x, y, x + 1, y)
             newNode3.changeTile(x, y, x - 1, y)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            newNode3.f = newNode1.heuristica(x, y) + newNode3.custo
-            
-            if (newNode1 not in frontier):
+            newNode1.heuristica()
+            newNode2.heuristica()
+            newNode3.heuristica()
+
+            repeated1 = False
+            repeated2 = False
+            repeated3 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
-            if (newNode3 not in frontier):
+            if (not repeated3):
                 heapq.heappush(frontier, newNode3)
+
         elif y == 1:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
-            newNode3 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode4 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+            newNode3 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode4 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
 
             newNode1.changeTile(x, y, x, y + 1)
             newNode2.changeTile(x, y, x + 1, y)
-            #newNode3.changeTile(x, y, x - 1, y)
-            #newNode4.changeTile(x, y, x , y - 1)
+            newNode3.changeTile(x, y, x - 1, y)
+            newNode4.changeTile(x, y, x , y - 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            newNode3.f = newNode1.heuristica(x, y) + newNode3.custo
-            newNode4.f = newNode1.heuristica(x, y) + newNode4.custo
+            newNode1.heuristica()
+            newNode2.heuristica()
+            newNode3.heuristica()
+            newNode4.heuristica()
 
-            if (newNode1 not in frontier):
+            repeated1 = False
+            repeated2 = False
+            repeated3 = False
+            repeated4 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+                if newNode4.tab == state.tab:
+                    repeated4 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+                if newNode4.tab == state.tab:
+                    repeated4 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
-            if (newNode3 not in frontier):
+            if (not repeated3):
                 heapq.heappush(frontier, newNode3)
-            if (newNode4 not in frontier):  
+            if (not repeated4):
                 heapq.heappush(frontier, newNode4)
 
         elif y == 2:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
-            newNode3 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            #print('aqui2')
-            #newNode1.changeTile(x, y, x, y - 1)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+            newNode3 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+
+            newNode1.changeTile(x, y, x, y - 1)
             newNode2.changeTile(x, y, x + 1, y)
-            #newNode3.changeTile(x, y, x - 1, y)
+            newNode3.changeTile(x, y, x - 1, y)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            newNode3.f = newNode1.heuristica(x, y) + newNode3.custo
+            newNode1.heuristica()
+            newNode2.heuristica()
+            newNode3.heuristica()
 
-            if (newNode1 not in frontier):
+            repeated1 = False
+            repeated2 = False
+            repeated3 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
-            if (newNode3 not in frontier):
+            if (not repeated3):
                 heapq.heappush(frontier, newNode3)
+
     elif x == 2:
         if y == 0:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
 
             newNode1.changeTile(x, y, x - 1, y)
             newNode2.changeTile(x, y, x, y + 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
+            newNode1.heuristica()
+            newNode2.heuristica()
 
-            if (newNode1 not in frontier):
+            repeated1 = False
+            repeated2 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
             
         elif y == 1:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
-            newNode3 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
+            newNode3 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
 
             newNode1.changeTile(x, y, x, y - 1)
             newNode2.changeTile(x, y, x - 1, y)
             newNode3.changeTile(x, y, x, y + 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
-            newNode3.f = newNode1.heuristica(x, y) + newNode3.custo
+            newNode1.heuristica()
+            newNode2.heuristica()
+            newNode3.heuristica()
 
-            if (newNode1 not in frontier):
+            repeated1 = False
+            repeated2 = False
+            repeated3 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+                if newNode3.tab == state.tab:
+                    repeated3 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
-            if (newNode3 not in frontier):
+            if (not repeated3):
                 heapq.heappush(frontier, newNode3)
+
         elif y == 2:
-            newNode1 = State(node, node.profundidade + 1, node.custo, 0, x, y, '1 no', node.tab)
-            newNode2 = State(node, node.profundidade + 1, node.custo, 0, x, y, '2 no', node.tab)
+            newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
+            newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
 
             newNode1.changeTile(x, y, x - 1, y)
             newNode2.changeTile(x, y, x, y - 1)
 
-            newNode1.f = newNode1.heuristica(x, y) + newNode1.custo
-            newNode2.f = newNode2.heuristica(x, y) + newNode2.custo
+            newNode1.heuristica()
+            newNode2.heuristica()
 
-            if (newNode1 not in frontier):
+            repeated1 = False
+            repeated2 = False
+            for state in frontier:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            for state in explored:
+                if newNode1.tab == state.tab:
+                    repeated1 = True
+                if newNode2.tab == state.tab:
+                    repeated2 = True
+            if (not repeated1):
                 heapq.heappush(frontier, newNode1)
-            if (newNode2 not in frontier):
+            if (not repeated2):
                 heapq.heappush(frontier, newNode2)
+
 
 estado = [[0,0,0],[0,0,0],[0,0,0]]
 print("Digite a configuracao do estado inicial, linha a linha:")
@@ -259,25 +413,37 @@ estado[2][1] = int(input())
 estado[2][2] = int(input())
 
 frontier = []
-no = State('raiz', 0, 0, 0, 0, 0, 'criar', estado)
+no = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
+no.pai = no
 no.addTabela(estado)
 
 #frontier.append(no)
 
-heapq.heappush(frontier, no)
+heapq.heappush(frontier,no)
 
 explored = []
 
 while True:
     #for x in frontier:
-    #    print(x.tab)
-    #    print(x.f)
-    #print('')
+    #    printTable(x)
+    #    print('')
+    #print(len(frontier))
+    explored.append(no)
+    #printTable(no)
+    #print('--------------------------------------------')
     no = heapq.heappop(frontier)
-    
-    printTable(no)
+    if (type(no.pai) is str):
+        print(no.pai)
+    else:
+        print(no.acao)
+        printTable(no)
+        
+    print(no.f)
+    #printTable(no)
     print('')
     if isSolution(no.tab):
+        print('Fim:')
+        printTable(no)
         break
     
     expandeNode(no)
