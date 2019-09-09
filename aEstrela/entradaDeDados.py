@@ -450,19 +450,22 @@ if (checkSolution(estado) == 0 or False):
         #printTable(no)
         #print('--------------------------------------------')
         no = heapq.heappop(frontier)
+        if isSolution(no.tab):
+            print('Passo: ' + str(no.profundidade))
+            print(no.acao)
+            printTable(no)
+            print('Fim!')
+            break
         if (type(no.pai) is str):
             print(no.pai)
         else:
+            print('Passo: ' + str(no.profundidade))
             print(no.acao)
             printTable(no)
             
-        print(no.f)
+        #print(no.f)
         #printTable(no)
         print('')
-        if isSolution(no.tab):
-            print('Fim:')
-            printTable(no)
-            break
         
         expandeNode(no)
         if len(frontier) == 0:
