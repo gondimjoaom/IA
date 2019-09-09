@@ -74,6 +74,23 @@ def printTable(node):
 #MOVIMENTOS
 #para cima:
 
+def checkSolution (estado):
+    arr = []
+    total = 0
+    for x in estado:
+        for i in x:
+            if i != 0:
+                arr.append(i)
+    for y in arr:
+        for t in range(arr.index(y),len(arr)):
+            #print('de ' + str(arr.index(y)) + ' a ' + str(len(arr)))
+            if y > arr[t]:
+                #print(y)
+                #print(arr[t])
+                total += 1
+    #print(total)
+    return ( total % 2 )
+
 def expandeNode (node):
     y = 0
     for aux in node.tab:
@@ -85,7 +102,6 @@ def expandeNode (node):
             pass
         y += 1
         #vazio = [x, y]
-    
     
     if x == 0:
         if y == 0: # dois nos criados
@@ -412,40 +428,45 @@ estado[2][0] = int(input())
 estado[2][1] = int(input())
 estado[2][2] = int(input())
 
-frontier = []
-no = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
-no.pai = no
-no.addTabela(estado)
+if (checkSolution(estado) == 0 or False):
 
-#frontier.append(no)
+    frontier = []
+    no = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
+    no.pai = no
+    no.addTabela(estado)
 
-heapq.heappush(frontier,no)
+    #frontier.append(no)
 
-explored = []
+    heapq.heappush(frontier,no)
 
-while True:
-    #for x in frontier:
-    #    printTable(x)
-    #    print('')
-    #print(len(frontier))
-    explored.append(no)
-    #printTable(no)
-    #print('--------------------------------------------')
-    no = heapq.heappop(frontier)
-    if (type(no.pai) is str):
-        print(no.pai)
-    else:
-        print(no.acao)
-        printTable(no)
+    explored = []
+
+    while True:
+        #for x in frontier:
+        #    printTable(x)
+        #    print('')
+        #print(len(frontier))
+        explored.append(no)
+        #printTable(no)
+        #print('--------------------------------------------')
+        no = heapq.heappop(frontier)
+        if (type(no.pai) is str):
+            print(no.pai)
+        else:
+            print(no.acao)
+            printTable(no)
+            
+        print(no.f)
+        #printTable(no)
+        print('')
+        if isSolution(no.tab):
+            print('Fim:')
+            printTable(no)
+            break
         
-    print(no.f)
-    #printTable(no)
-    print('')
-    if isSolution(no.tab):
-        print('Fim:')
-        printTable(no)
-        break
-    
-    expandeNode(no)
-    if len(frontier) == 0:
-        break
+        expandeNode(no)
+        if len(frontier) == 0:
+            break
+
+else:
+    print('Sem solucao!')
