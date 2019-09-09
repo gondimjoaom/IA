@@ -453,6 +453,7 @@ if (checkSolution(estado) == 0 or False):
         if isSolution(no.tab):
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
+            print('')
             printTable(no)
             print('Fim!')
             break
@@ -461,11 +462,12 @@ if (checkSolution(estado) == 0 or False):
         else:
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
+            print('')
             printTable(no)
             
         #print(no.f)
         #printTable(no)
-        print('')
+        
         
         expandeNode(no)
         if len(frontier) == 0:
