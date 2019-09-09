@@ -49,8 +49,11 @@ class State (object):
                     h += abs(x - 2) + abs(y - 2)
                 x += 1
             y += 1
-                
-        #print(h)
+        print('-------------- analisando função heuristica ---------------')
+        print(h)
+        print(self.custo)
+        printTable(self)
+        print('-------------- fim da analise do no -----------------------')
         self.f = self.custo + h
         return self.custo + h
         
@@ -460,7 +463,7 @@ if (checkSolution(estado) == 0 or False):
         if (type(no.pai) is str):
             print(no.pai)
         else:
-            print('Passo: ' + str(no.profundidade))
+            print('Passo: ' + str(no.f))
             print(no.acao)
             print('')
             printTable(no)
