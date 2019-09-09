@@ -119,9 +119,13 @@ def expandeNode (node):
             repeated1 = False
             repeated2 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -150,11 +154,17 @@ def expandeNode (node):
             repeated2 = False
             repeated3 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
-                if newNode3.tab == state.tab:
+                if (newNode3.tab == state.tab):
+                    if newNode3.f < state.f:
+                        state = newNode3
                     repeated3 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -183,9 +193,13 @@ def expandeNode (node):
             repeated1 = False
             repeated2 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -216,11 +230,17 @@ def expandeNode (node):
             repeated2 = False
             repeated3 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
-                if newNode3.tab == state.tab:
+                if (newNode3.tab == state.tab):
+                    if newNode3.f < state.f:
+                        state = newNode3
                     repeated3 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -257,13 +277,21 @@ def expandeNode (node):
             repeated3 = False
             repeated4 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
-                if newNode3.tab == state.tab:
+                if (newNode3.tab == state.tab):
+                    if newNode3.f < state.f:
+                        state = newNode3
                     repeated3 = True
-                if newNode4.tab == state.tab:
+                if (newNode4.tab == state.tab):
+                    if newNode4.f < state.f:
+                        state = newNode4
                     repeated4 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -300,11 +328,17 @@ def expandeNode (node):
             repeated2 = False
             repeated3 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
-                if newNode3.tab == state.tab:
+                if (newNode3.tab == state.tab):
+                    if newNode3.f < state.f:
+                        state = newNode3
                     repeated3 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -334,9 +368,13 @@ def expandeNode (node):
             repeated1 = False
             repeated2 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -365,11 +403,17 @@ def expandeNode (node):
             repeated2 = False
             repeated3 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
-                if newNode3.tab == state.tab:
+                if (newNode3.tab == state.tab):
+                    if newNode3.f < state.f:
+                        state = newNode3
                     repeated3 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -398,9 +442,13 @@ def expandeNode (node):
             repeated1 = False
             repeated2 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab):
+                    if newNode1.f < state.f:
+                        state = newNode1                    
                     repeated1 = True
-                if newNode2.tab == state.tab:
+                if (newNode2.tab == state.tab):
+                    if newNode2.f < state.f:
+                        state = newNode2
                     repeated2 = True
             for state in explored:
                 if newNode1.tab == state.tab:
@@ -453,6 +501,7 @@ if (checkSolution(estado) == 0 or False):
         if isSolution(no.tab):
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
+            print('')
             printTable(no)
             print('Fim!')
             break
@@ -461,11 +510,12 @@ if (checkSolution(estado) == 0 or False):
         else:
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
+            print('')
             printTable(no)
             
         #print(no.f)
         #printTable(no)
-        print('')
+        
         
         expandeNode(no)
         if len(frontier) == 0:
