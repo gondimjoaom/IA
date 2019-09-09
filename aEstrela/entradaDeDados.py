@@ -216,7 +216,7 @@ def expandeNode (node):
             repeated2 = False
             repeated3 = False
             for state in frontier:
-                if newNode1.tab == state.tab:
+                if (newNode1.tab == state.tab and newNode1.f > state.f): #mudando de branch, isso aqui estava como os outros
                     repeated1 = True
                 if newNode2.tab == state.tab:
                     repeated2 = True
