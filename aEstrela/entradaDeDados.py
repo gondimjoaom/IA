@@ -23,7 +23,7 @@ class State (object):
         aux1 = self.tab[newY][newX]
         self.tab[newY][newX] = 0
         self.tab[y][x] = aux1
-        self.acao = 'trocar ' + str(self.tab[y][x]) + ' com o 0'
+        self.acao = 'Fazer a troca de ' + str(self.tab[y][x]) + ' com 0'
 
     def heuristica (self):
         h = 0
@@ -466,8 +466,14 @@ def expandeNode (node):
             if (not repeated2):
                 heapq.heappush(frontier, newNode2)
 
-
+no_solucao = State('solucao', 0, 0, 0, 0, 0, 'raiz', [[0,1,2],[3,4,5],[6,7,8]])
 estado = [[0,0,0],[0,0,0],[0,0,0]]
+
+print('Bem vindo ao jogo 8-puzzle! \nO estado de aceitação é:\n')
+printTable(no_solucao)
+print('')
+print('================= Vamos começar! ======================\n')
+
 print("Digite a configuracao do estado inicial, linha a linha:")
 print(" Digite os valores da primeira linha:")
 estado[0][0] = int(input())
@@ -486,10 +492,6 @@ if (checkSolution(estado) == 0 or False):
 
     frontier = []
     no_raiz = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
-    #no.pai = no
-    #no.addTabela(estado)
-
-    #frontier.append(no)
 
     heapq.heappush(frontier,no_raiz)
 
@@ -512,11 +514,12 @@ if (checkSolution(estado) == 0 or False):
                 print('')
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
-            print('')
             printTable(no)
+            print('\nFim!')
             break
         elif (type(no.pai) is str):
-            print(no.pai)
+            #print(no.pai)
+            print('\nO estado inicial digitado é:\n')
             printTable(no_raiz)
             print('')
         
@@ -525,4 +528,4 @@ if (checkSolution(estado) == 0 or False):
             break
 
 else:
-    print('Sem solucao!')
+    print('O estado inicial digitado não tem solução!')
