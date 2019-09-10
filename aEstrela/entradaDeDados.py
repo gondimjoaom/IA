@@ -49,12 +49,18 @@ class State (object):
                     h += abs(x - 2) + abs(y - 2)
                 x += 1
             y += 1
-                
-        #print(h)
+        if False:        
+            print('-------------- analisando função heuristica ---------------')
+            print(h)
+            print(self.custo)
+            printTable(self)
+            print('-------------- fim da analise do no -----------------------')
         self.f = self.custo + h
         return self.custo + h
         
     def __lt__(self, other):
+        if self.f == other.f:
+            return self.f - self.custo < other.f - other.custo
         return self.f < other.f
 
 def isSolution (state):
@@ -93,7 +99,7 @@ def checkSolution (estado):
 
 def expandeNode (node):
     y = 0
-    for aux in node.tab:
+    for aux in node.tab: #encontrando o zero
         try:
             x = aux.index(0)
             #vazio = [x,y]
@@ -479,43 +485,39 @@ estado[2][2] = int(input())
 if (checkSolution(estado) == 0 or False):
 
     frontier = []
-    no = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
-    no.pai = no
-    no.addTabela(estado)
+    no_raiz = State('raiz', 0, 0, 0, 0, 0, 'raiz', estado)
+    #no.pai = no
+    #no.addTabela(estado)
 
     #frontier.append(no)
 
-    heapq.heappush(frontier,no)
+    heapq.heappush(frontier,no_raiz)
 
     explored = []
-
+    explored.append(no_raiz)
     while True:
-        #for x in frontier:
-        #    printTable(x)
-        #    print('')
-        #print(len(frontier))
-        explored.append(no)
-        #printTable(no)
-        #print('--------------------------------------------')
         no = heapq.heappop(frontier)
+        explored.append(no)
         if isSolution(no.tab):
+            node = no.pai
+            caminho =[]
+            while node.pai != 'raiz':
+                caminho.insert(0, node)
+                node = node.pai
+            #printTable(no_raiz)
+            for i in caminho:
+                print('Passo: ' + str(i.profundidade))
+                print(i.acao)
+                printTable(i)
+                print('')
             print('Passo: ' + str(no.profundidade))
             print(no.acao)
-            print('')
             printTable(no)
-            print('Fim!')
             break
-        if (type(no.pai) is str):
+        elif (type(no.pai) is str):
             print(no.pai)
-        else:
-            print('Passo: ' + str(no.profundidade))
-            print(no.acao)
+            printTable(no_raiz)
             print('')
-            printTable(no)
-            
-        #print(no.f)
-        #printTable(no)
-        
         
         expandeNode(no)
         if len(frontier) == 0:
