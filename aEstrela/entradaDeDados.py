@@ -1,9 +1,7 @@
-#import classeEstado as node
 import heapq
 
-class State (object):
+class State (object): #preferimos colocar a classe estado aqui
     def __init__(self, pai, profundidade, custo, f, linha_espaco, coluna_espaco, acao, tab):
-        #self.tab = copy.deepcopy(tab)
         table = []
         for l in tab:
             table.append(l[:])
@@ -16,23 +14,20 @@ class State (object):
         self.coluna_espaco = coluna_espaco
         self.acao = acao
 
-    def addTabela(self, tabela):
-        self.tab = tabela
-
-    def changeTile(self, x, y, newX, newY):
+    def changeTile(self, x, y, newX, newY): #funcao que faz a troca do espaco vazio por outro numero em outro espaco
         aux1 = self.tab[newY][newX]
         self.tab[newY][newX] = 0
         self.tab[y][x] = aux1
-        self.acao = 'Fazer a troca de ' + str(self.tab[y][x]) + ' com 0'
+        self.acao = 'Fazer a troca de ' + str(self.tab[y][x]) + ' com 0' #funcao tambem adiciona a acao ao no
 
-    def heuristica (self):
+    def heuristica (self): #funcao heuristica
         h = 0
         y = 0
         for i in self.tab:
             x = 0
-            for j in i:
+            for j in i: #para cada valor em cada lista da lista maior, o valor de h é incrementado com a distancia de manhattan
                 if j == 1:
-                    h += abs(x - 1) + abs(y - 0)
+                    h += abs(x - 1) + abs(y - 0) #distancia calculada com a funcao abs() do python, que retorna o modulo de um numero
                 elif j == 2:
                     h += abs(x - 2) + abs(y - 0)
                 elif j == 3:
@@ -49,68 +44,58 @@ class State (object):
                     h += abs(x - 2) + abs(y - 2)
                 x += 1
             y += 1
-        if False:        
+        if False: #if apenas para debbug, por padrao esta desativado
             print('-------------- analisando função heuristica ---------------')
             print(h)
             print(self.custo)
             printTable(self)
             print('-------------- fim da analise do no -----------------------')
         self.f = self.custo + h
-        return self.custo + h
         
-    def __lt__(self, other):
-        if self.f == other.f:
+    def __lt__(self, other): #essa funcao serve para a comparacao usada no heapq levar em conta o valor da funcao heuristica em primeiro lugar
+        if self.f == other.f: #caso o valor da heuristica seja igual, o no com menor custo eh colocado no comeco da fila de prioridade (heapq)
             return self.f - self.custo < other.f - other.custo
         return self.f < other.f
 
-def isSolution (state):
+def isSolution (state): #verificando solucao
     if (state[0] == [0, 1, 2]):
         if (state[1] == [3, 4, 5]):
             if (state[2] == [6, 7, 8]):
-                #print('aqui')
                 return True
     return False
 
-def printTable(node):
+def printTable(node): #funcao para imprimir a tabela de um jeito mais apresentavel
     if node != 'raiz':
         for y in node.tab:
             print(y)
     else:
         print('raiz')        
-#MOVIMENTOS
-#para cima:
 
-def checkSolution (estado):
+def checkSolution (estado): #funcao para determinar se o estado inserido tem solucao
     arr = []
     total = 0
     for x in estado:
         for i in x:
             if i != 0:
-                arr.append(i)
+                arr.append(i) #a funcao pega todos os numeros inseridos, na ordem e menos o zero, e os coloca em uma lista
     for y in arr:
-        for t in range(arr.index(y),len(arr)):
-            #print('de ' + str(arr.index(y)) + ' a ' + str(len(arr)))
+        for t in range(arr.index(y),len(arr)): #dentro dessa lista, para cada numero eh verificado quando numeros menores que ele estao a sua frente
             if y > arr[t]:
-                #print(y)
-                #print(arr[t])
                 total += 1
-    #print(total)
-    return ( total % 2 )
+    return ( total % 2 ) #se o total de numeros for par, tem solucao, se for ímpar, nao tem
 
-def expandeNode (node):
+def expandeNode (node): #funcao para expandir cada no
     y = 0
     for aux in node.tab: #encontrando o zero
         try:
             x = aux.index(0)
-            #vazio = [x,y]
             break
         except:
             pass
         y += 1
-        #vazio = [x, y]
-    
-    if x == 0:
-        if y == 0: # dois nos criados
+    #ao final do loop acima, x e y formama posicao onde se encontra o espaco vazio
+    if x == 0: #para cada valores de x e y, uma quantidade especifica de nos eh criada
+        if y == 0:
             #def __init(self, pai, profundidade, custo, f, linha_espaco, coluna_espaco, acao, tab):
             newNode1 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '1 no', node.tab)
             newNode2 = State(node, node.profundidade + 1, node.custo + 1, 0, x, y, '2 no', node.tab)
@@ -124,22 +109,22 @@ def expandeNode (node):
 
             repeated1 = False
             repeated2 = False
-            for state in frontier:
+            for state in frontier: #verificando se os nos criados ja pertencem a fronteira
                 if (newNode1.tab == state.tab):
-                    if newNode1.f < state.f:
+                    if newNode1.f < state.f: #caso o no ja esteja na fronteira e tenha funcao heuristica menor, o no subistitui o que esta na fronteira
                         state = newNode1
                     repeated1 = True
                 if (newNode2.tab == state.tab):
                     if newNode2.f < state.f:
                         state = newNode2
                     repeated2 = True
-            for state in explored:
+            for state in explored: #veriricando se os nos criados ja foram explorados
                 if newNode1.tab == state.tab:
                     repeated1 = True
                 if newNode2.tab == state.tab:
                     repeated2 = True
             if (not repeated1):
-                heapq.heappush(frontier, newNode1)
+                heapq.heappush(frontier, newNode1) #adicionando os nos criados a fila de prioridade implementada com heapq
             if (not repeated2):
                 heapq.heappush(frontier, newNode2)            
 
@@ -498,17 +483,16 @@ if (checkSolution(estado) == 0 or False):
     explored = []
     explored.append(no_raiz)
     while True:
-        no = heapq.heappop(frontier)
-        explored.append(no)
-        if isSolution(no.tab):
+        no = heapq.heappop(frontier) #retirando primeiro no na fila de prioridade
+        explored.append(no) #inserindo na lista de explorados
+        if isSolution(no.tab): #caso seja solucao, vamos armazenar o pai de cada no em loop ate atingir a raiz
             node = no.pai
             caminho =[]
             while node.pai != 'raiz':
                 caminho.insert(0, node)
                 node = node.pai
-            #printTable(no_raiz)
-            for i in caminho:
-                print('Passo: ' + str(i.profundidade))
+            for i in caminho: #depois de criar o caminho com os pais dos nos, vamo imprimir cada passo
+                print('Passo: ' + str(i.profundidade)) #especificamente para este problema, a quantidade de passos vai ser igual a profundidade do no solucao
                 print(i.acao)
                 printTable(i)
                 print('')
@@ -518,7 +502,6 @@ if (checkSolution(estado) == 0 or False):
             print('\nFim!')
             break
         elif (type(no.pai) is str):
-            #print(no.pai)
             print('\nO estado inicial digitado é:\n')
             printTable(no_raiz)
             print('')
